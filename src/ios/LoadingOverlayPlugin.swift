@@ -27,8 +27,8 @@ import UIKit
             view.alpha = 0.0
             parentView.addSubview(view)
 
-            UIView.animateWithDuration(0.5, animations: { 
-                view.alpha = 1.0
+            UIView.animateWithDuration(0.5, animations: { [weak view] in
+                view?.alpha = 1.0
             }, completion: { [unowned self] (_) in
                 let result = CDVPluginResult(status: CDVCommandStatus_OK)
                 self.commandDelegate.sendPluginResult(result, callbackId: self.command.callbackId)
@@ -42,8 +42,8 @@ import UIKit
         self.command = command
         
         if let loadingOverlay = overlay {
-            UIView.animateWithDuration(0.5, animations: { 
-                loadingOverlay.alpha = 0.0
+            UIView.animateWithDuration(0.5, animations: { [weak loadingOverlay] in
+                loadingOverlay?.alpha = 0.0
             }, completion: { [unowned self] _ in
                 loadingOverlay.removeFromSuperview()
                 self.overlay = nil
@@ -70,10 +70,16 @@ class RoundUpLoadingOverlay: UIVisualEffectView {
         label.text = message
         label.textColor = UIColor.whiteColor()
         label.translatesAutoresizingMaskIntoConstraints = false
+        label.lineBreakMode = .ByWordWrapping
+        label.numberOfLines = 0
+        label.font = UIFont.boldSystemFontOfSize(20.0)
+        label.textAlignment = .Center
         self.addSubview(label)
 
         let labelCentreConstraint = NSLayoutConstraint(item: label, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1.0, constant: 0)
         let labelTopConstraint = NSLayoutConstraint(item: label, attribute: .TopMargin, relatedBy: .Equal, toItem: self, attribute: .TopMargin, multiplier: 1.0, constant: 100)
+        let labelLeftConstraint = NSLayoutConstraint(item: label, attribute: .LeftMargin, relatedBy: .Equal, toItem: self, attribute: .Left, multiplier: 1.0, constant: 20.0)
+        let labelRightConstraint = NSLayoutConstraint(item: label, attribute: .RightMargin, relatedBy: .Equal, toItem: self, attribute: .Right, multiplier: 1.0, constant: 20.0)
 
         let spinner = UIActivityIndicatorView(activityIndicatorStyle: .WhiteLarge)
         spinner.translatesAutoresizingMaskIntoConstraints = false
@@ -82,7 +88,7 @@ class RoundUpLoadingOverlay: UIVisualEffectView {
         let spinnerCentreXConstraint = NSLayoutConstraint(item: spinner, attribute: .CenterX, relatedBy: .Equal, toItem: self, attribute: .CenterX, multiplier: 1.0, constant: 0)
         let spinnerCentreYConstraint = NSLayoutConstraint(item: spinner, attribute: .CenterY, relatedBy: .Equal, toItem: self, attribute: .CenterY, multiplier: 1.0, constant: 0)
 
-        NSLayoutConstraint.activateConstraints([labelCentreConstraint, labelTopConstraint, spinnerCentreXConstraint, spinnerCentreYConstraint])
+        NSLayoutConstraint.activateConstraints([labelCentreConstraint, labelTopConstraint, labelLeftConstraint, labelRightConstraint, spinnerCentreXConstraint, spinnerCentreYConstraint])
 
         spinner.startAnimating()
     }
