@@ -4,6 +4,6 @@ Cordova plugin that displays a full screen loading page with a message (we use i
 
 # Installation
 
-     $ cordova plugins add https://github.com/NotTheUsual/GalleryCordovaPlugin
+     $ cordova plugins add https://github.com/NotTheUsual/iOSLoadingOverlayCordovaPlugin
 
 
